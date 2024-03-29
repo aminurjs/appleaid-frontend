@@ -1,4 +1,6 @@
+import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import { createContext } from "react";
 import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
@@ -8,15 +10,11 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import auth from "@/config/firebase.config";
-import useAxios from "./useAxios";
-
-const useAuth = () => {
-  const axios = useAxios();
+import auth from "@/Config/Firebase.config";
+export const AuthContext = createContext();
+const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isRoleLoading, setIsRoleLoading] = useState(true);
-  const [userRole, setUserRole] = useState();
 
   const createUser = (email, password) => {
     setIsLoading(true);
@@ -38,6 +36,7 @@ const useAuth = () => {
     setIsLoading(true);
     return signOut(auth);
   };
+
   const googleProvider = new GoogleAuthProvider();
   const googleLogin = () => {
     return signInWithPopup(auth, googleProvider);
@@ -53,23 +52,8 @@ const useAuth = () => {
       return unSubscribe();
     };
   }, []);
-  useEffect(() => {
-    if (user) {
-      axios
-        .get(`/user/${user.email}`)
-        .then(function (response) {
-          const { role } = response.data;
-          setUserRole({ role });
-          setIsRoleLoading(false);
-        })
-        .catch(function (error) {
-          console.log(error);
-          setUserRole({ role: null });
-          setIsRoleLoading(false);
-        });
-    }
-  }, [user, axios]);
-  return {
+  console.log(user);
+  const values = {
     createUser,
     login,
     updateUser,
@@ -77,9 +61,13 @@ const useAuth = () => {
     isLoading,
     logout,
     googleLogin,
-    userRole,
-    isRoleLoading,
   };
+
+  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };
 
-export default useAuth;
+AuthProvider.propTypes = {
+  children: PropTypes.node,
+};
+
+export default AuthProvider;

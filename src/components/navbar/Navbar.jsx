@@ -5,6 +5,7 @@ import { MobileNav } from "./MobileNav";
 import UserProfile from "./UserProfile";
 import { useOnClickOutside } from "@/hooks/onClickOutside";
 import { Link, NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export const menuItems = [
   { id: 1, name: "Home", path: "/" },
@@ -41,6 +42,9 @@ export const menuItems = [
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navRef = useRef(null);
+  const { user } = useSelector((state) => state.userSlice);
+  console.log(user);
+
   useOnClickOutside(navRef, () => setIsOpen(false));
   return (
     <header className="w-full py-5 sm:px10 px-5 border-b border-gray-200">

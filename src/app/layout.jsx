@@ -4,6 +4,9 @@ import Home from "./home/Home";
 import LoginForm from "./login/Login";
 import SignUpForm from "./signin/SignIn";
 import DashboardLayout from "./dashboard/layout";
+import Dashboard from "./dashboard/page";
+import Posts from "./dashboard/posts/page";
+import PostDetails from "./post/post";
 
 const routes = createBrowserRouter([
   {
@@ -13,6 +16,10 @@ const routes = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: "/post/:id",
+        element: <PostDetails />,
       },
       {
         path: "/login",
@@ -25,6 +32,16 @@ const routes = createBrowserRouter([
       {
         path: "/dashboard",
         element: <DashboardLayout />,
+        children: [
+          {
+            index: true,
+            element: <Dashboard />,
+          },
+          {
+            path: "/dashboard/posts",
+            element: <Posts />,
+          },
+        ],
       },
     ],
   },

@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
+import useAuth from "@/hooks/useAuth";
+import useAxios from "@/hooks/useAxios";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function SignUpForm() {
   const {
@@ -9,30 +11,34 @@ function SignUpForm() {
     formState: { errors },
   } = useForm();
 
+  const { createUser, updateUser } = useAuth();
+  const navigate = useNavigate();
+  const axios = useAxios();
+
   const onSubmit = async (data) => {
     console.log(data);
-    // const { name, password, email } = data;
-    // createUser(email, password)
-    //   .then((result) => {
-    //     let photo = null;
-    //     updateUser(name, photo).then(() => {
-    //       console.log(result.user);
-    //       const user = {
-    //         email: result.user.email,
-    //         name: result.user.displayName,
-    //       };
-    //       axios
-    //         .post(`/sign-in`, user)
-    //         .then((response) => {
-    //           console.log(response.data);
-    //           router.push("/", { scroll: false });
-    //         })
-    //         .catch((error) => {
-    //           return console.log(error.code);
-    //         });
-    //     });
-    //   })
-    //   .catch((error) => console.log(error));
+    const { name, password, email } = data;
+    createUser(email, password)
+      .then((result) => {
+        let photo = null;
+        updateUser(name, photo).then(() => {
+          console.log(result.user);
+          const user = {
+            email: result.user.email,
+            name: result.user.displayName,
+          };
+          axios
+            .post(`/sign-in`, user)
+            .then((response) => {
+              console.log(response.data);
+              navigate("/");
+            })
+            .catch((error) => {
+              return console.log(error.code);
+            });
+        });
+      })
+      .catch((error) => console.log(error));
   };
 
   return (

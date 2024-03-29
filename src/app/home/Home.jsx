@@ -1,4 +1,5 @@
 import Banner from "@/components/banner/Banner";
+import FeaturedPosts from "@/components/posts/FeaturedPosts";
 import Services from "@/components/services/Services";
 
 const Home = () => {
@@ -6,7 +7,7 @@ const Home = () => {
     <>
       <Banner />
       <Services />
-      {/* <FeaturedPosts /> */}
+      <FeaturedPosts />
     </>
   );
 };

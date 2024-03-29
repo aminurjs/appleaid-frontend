@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
+import useAuth from "@/hooks/useAuth";
+import useAxios from "@/hooks/useAxios";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function LoginForm() {
   const {
@@ -8,42 +10,41 @@ function LoginForm() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  //   const { login, googleLogin } = useAuth();
-  //   const axios = useAxios();
-  //   const router = useRouter();
+  const { login, googleLogin } = useAuth();
+  const axios = useAxios();
+  const navigate = useNavigate();
   const onSubmit = (data) => {
-    console.log(data);
-    //     const { email, password } = data;
-    //     login(email, password)
-    //       .then((result) => {
-    //         console.log(result.user);
-    //         router.push("/", { scroll: false });
-    //       })
-    //       .catch((err) => {
-    //         console.error(err);
-    //       });
+    const { email, password } = data;
+    login(email, password)
+      .then((result) => {
+        console.log(result.user);
+        navigate("/");
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
-  //   const handleGoogleLogin = () => {
-  //     googleLogin()
-  //       .then((result) => {
-  //         const user = {
-  //           email: result.user.email,
-  //           name: result.user.displayName,
-  //         };
-  //         axios
-  //           .post(`/google-login`, user)
-  //           .then((response) => {
-  //             console.log(response.data);
-  //             router.push("/", { scroll: false });
-  //           })
-  //           .catch((error) => {
-  //             return console.log(error.code);
-  //           });
-  //       })
-  //       .catch((err) => {
-  //         console.error(err);
-  //       });
-  //   };
+  const handleGoogleLogin = () => {
+    googleLogin()
+      .then((result) => {
+        const user = {
+          email: result.user.email,
+          name: result.user.displayName,
+        };
+        axios
+          .post(`/google-login`, user)
+          .then((response) => {
+            console.log(response.data);
+            navigate("/");
+          })
+          .catch((error) => {
+            return console.log(error.code);
+          });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   return (
     <div className="flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -163,7 +164,10 @@ function LoginForm() {
           </div>
         </form>
         <div className="text-center mt-8 w-4/5 lg:w-3/5 mx-auto">
-          <button className="flex gap-2 justify-center items-center w-full p-2 border border-red-2  text-red-2 font-medium rounded-lg mb-5">
+          <button
+            onClick={handleGoogleLogin}
+            className="flex gap-2 justify-center items-center w-full p-2 border border-red-2  text-red-2 font-medium rounded-lg mb-5"
+          >
             <svg
               width="25px"
               height="25px"

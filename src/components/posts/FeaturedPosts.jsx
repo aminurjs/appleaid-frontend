@@ -1,8 +1,13 @@
-import { dataFetching } from "@/lib/utils";
+import { useEffect, useState } from "react";
 import Card from "./Card";
+import useAxios from "@/hooks/useAxios";
 
-const FeaturedPosts = async () => {
-  const data = await dataFetching("http://localhost:5000/api/all-posts");
+const FeaturedPosts = () => {
+  const [data, setData] = useState([]);
+  const axios = useAxios();
+  useEffect(() => {
+    axios.get("/all-posts").then((res) => setData(res.data));
+  }, [axios]);
 
   return (
     <section className="max-w-screen-xl mx-auto px-5 md:px-10 py-12">

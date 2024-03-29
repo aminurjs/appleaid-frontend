@@ -1,8 +1,5 @@
-"use client";
-
-import Image from "next/image";
-/* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
+import { useState } from "react";
+import PropTypes from "prop-types";
 
 const ImageUpload = ({ sendImage }) => {
   const [image, setImage] = useState(null);
@@ -35,7 +32,7 @@ const ImageUpload = ({ sendImage }) => {
       </label>
       {image ? (
         <div className="relative">
-          <Image
+          <img
             src={image}
             alt="Uploaded"
             className="w-full h-auto"
@@ -78,3 +75,7 @@ const ImageUpload = ({ sendImage }) => {
 };
 
 export default ImageUpload;
+
+ImageUpload.propTypes = {
+  sendImage: PropTypes.func,
+};

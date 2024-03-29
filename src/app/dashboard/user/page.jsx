@@ -1,6 +1,6 @@
 import UserProfile from "@/components/dashboard/UserProfile";
 
-const Profile = () => {
+const User = () => {
   return (
     <div className="p-5">
       <div className="p-5 bg-white">
@@ -13,4 +13,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default User;

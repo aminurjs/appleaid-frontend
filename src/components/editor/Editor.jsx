@@ -1,27 +1,31 @@
-"use client";
-
 import { useState } from "react";
 import ImageUpload from "./ImageUpload";
-import { Button } from "../components/ui/button";
-import useAxios from "../../hooks/useAxios";
 import axios from "axios";
+import useAxios from "@/hooks/useAxios";
+import { Button } from "../ui/button";
+import PropTypes from "prop-types";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import "./editor.css";
+import useAuth from "@/hooks/useAuth";
 
-const key = "0a920f43304618f2c50375cd043a81c2";
+const key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 
 const Editor = () => {
   const [content, setContent] = useState("");
+  const [htmlContent, setHtmlContent] = useState("");
   const [title, setTitle] = useState("");
   const [image, setImage] = useState(null);
+  const { user } = useAuth();
   const postAxios = useAxios();
 
-  // const handleEditorChange = (html) => {
-  //   setContent(html);
-  // };
-
-  console.log({ title, image, content });
+  const handleEditorChange = (html) => {
+    setHtmlContent(html);
+  };
 
   const handlePost = async () => {
-    if (title.length === 0 || content.length === 0) return;
+    if (title.length === 0 || content.length === 0 || htmlContent.length === 0)
+      return;
     let photo;
     if (!image) {
       photo = null;
@@ -55,6 +59,11 @@ const Editor = () => {
       title,
       image: photo,
       content,
+      htmlContent,
+      user: {
+        name: user?.displayName,
+        email: user.email,
+      },
     };
     console.log(postData);
     postAxios
@@ -88,22 +97,21 @@ const Editor = () => {
             htmlFor="title"
             className="mb-2 text-primary font-medium block"
           >
-            Post description:
+            Short description:
           </label>
-          <textarea
+          <input
+            type="text"
             name="content"
             className="border border-gray-300 p-2 w-full outline-none"
-            id=""
-            placeholder="Write your posts content"
-            rows="5"
+            placeholder="Write your posts first impression"
             onChange={(e) => setContent(e.target.value)}
-          ></textarea>
+          />
         </div>
         <ImageUpload sendImage={setImage} />
       </div>
       <h2 className="mb-2 text-primary font-medium">Write your post:</h2>
       <div className="mb-5">
-        {/* <QuillEditor value={content} onChange={handleEditorChange} /> */}
+        <QuillEditor value={htmlContent} onChange={handleEditorChange} />
       </div>
       <div onClick={handlePost}>
         <Button
@@ -119,23 +127,28 @@ const Editor = () => {
 
 export default Editor;
 
-// const QuillEditor = ({ value, onChange }) => {
-//   const [editorHtml, setEditorHtml] = useState(value);
+const QuillEditor = ({ value, onChange }) => {
+  const [editorHtml, setEditorHtml] = useState(value);
 
-//   const handleChange = (html) => {
-//     setEditorHtml(html);
-//     if (onChange) {
-//       onChange(html);
-//     }
-//   };
+  const handleChange = (html) => {
+    setEditorHtml(html);
+    if (onChange) {
+      onChange(html);
+    }
+  };
 
-//   return (
-//     <ReactQuill
-//       theme="snow" // Specify Quill theme
-//       value={editorHtml}
-//       onChange={handleChange}
-//       placeholder="Write something..."
-//       height="400px"
-//     />
-//   );
-// };
+  return (
+    <ReactQuill
+      theme="snow"
+      value={editorHtml}
+      onChange={handleChange}
+      placeholder="Write something..."
+      height="400px"
+    />
+  );
+};
+
+QuillEditor.propTypes = {
+  value: PropTypes.node,
+  onChange: PropTypes.func,
+};

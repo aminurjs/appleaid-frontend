@@ -1,16 +1,17 @@
-"use client";
-
-import useAuth from "../../hooks/useAuth";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import useUser from "@/hooks/useUser";
+import User from "./user/page";
+import AdminDashboard from "./admin/page";
+import { useNavigate } from "react-router-dom";
+import useAuth from "@/hooks/useAuth";
 
 const Dashboard = () => {
-  const { userRole, isRoleLoading } = useAuth();
-  const router = useRouter();
-  if (isRoleLoading) {
+  const { userRole, userLoading } = useUser();
+  const { isLoading } = useAuth();
+  const router = useNavigate();
+  if (userLoading || isLoading) {
     return (
       <div className="h-80 flex items-center justify-center">
-        <Image
+        <img
           height={80}
           width={80}
           className="animate-spin"
@@ -20,12 +21,13 @@ const Dashboard = () => {
       </div>
     );
   }
+  console.log(userRole);
   if (userRole.role === "user") {
-    return router.push("/dashboard/profile", { scroll: false });
+    return <User />;
   } else if (userRole.role === "admin") {
-    return router.push("/dashboard/admin", { scroll: false });
+    return <AdminDashboard />;
   } else {
-    return router.push("/", { scroll: false });
+    return router("/login");
   }
 };
 

@@ -1,11 +1,11 @@
-import Image from "next/image";
-import Link from "next/link";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 const Card = ({ card }) => {
   return (
     <div className="bg-white rounded border border-gray-200 ">
-      <Link href={`/post/${card._id}`}>
-        <Image
+      <Link to={`/post/${card._id}`}>
+        <img
           className="rounded-t aspect-[10/6]"
           src={card.image || "/assets/no-img.jpg"}
           alt=""
@@ -16,7 +16,7 @@ const Card = ({ card }) => {
       <div className="p-5">
         <div className="pb-3 mb-4 border-b border-gray-200">
           <Link
-            href={`/post/${card._id}`}
+            to={`/post/${card._id}`}
             className="text-2xl font-semibold text-dark-01 hover:underline"
           >
             {" "}
@@ -34,6 +34,10 @@ const Card = ({ card }) => {
       </div>
     </div>
   );
+};
+
+Card.propTypes = {
+  card: PropTypes.object,
 };
 
 export default Card;

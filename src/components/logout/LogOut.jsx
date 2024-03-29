@@ -1,18 +1,17 @@
-"use client";
-import useAuth from "../../hooks/useAuth";
-import { Button } from "../components/ui/button";
+import { useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
-import { useRouter } from "next/navigation";
+import useAuth from "@/hooks/useAuth";
+import { Button } from "../ui/button";
 
 const LogOutButton = () => {
   const { logout } = useAuth();
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const handleLogOut = () => {
     logout()
       .then(() => {
         //Logout
-        router.push("/login", { scroll: false });
+        navigate("/");
       })
       .catch((error) => {
         console.log(error);
